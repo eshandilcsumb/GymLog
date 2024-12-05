@@ -7,12 +7,18 @@ The goal of this project is to work through all the steps necessary to create an
 3. Make the initial project
 
 ## Basic functions
-1. Wire up the buttons
-2. Add the room dependencies
+1. Add [View Bindings](https://developer.android.com/topic/libraries/view-binding)
+2. Wire up the buttons
+3. Read information from display
+4. Log out information
+5. Test the display
+
+## Add the database
+1. Add the room dependencies
     * [Android Room Dependency](https://developer.android.com/jetpack/androidx/releases/room)
-3. Create the POJO entity objects
+2. Create the POJO entity objects
     * For now just a GymLog
-4.  Create database interface
-5.  Create the GymLog DAO
-6.  Make the repository
-7.  Use the Room repository to write/read logs
+3. Create database interface
+4. Create the GymLog DAO
+5. Make the repository
+6. Use the Room repository to write/read logs
