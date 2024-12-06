@@ -30,3 +30,11 @@ The goal of this project is to work through all the steps necessary to create an
 ## Fix pending issues
 1. Add singleton to fix the non-main thread issue
 2. Log the info
+3. Write a log to the DB
+4. Show it in the app inspector
+5. Add a toString
+
+## Update display
+1. Fix it so an empty string will not insert a log
+2. Clean up the toString()
+3. Use the retrieved records to update the display
