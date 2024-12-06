@@ -26,4 +26,7 @@ The goal of this project is to work through all the steps necessary to create an
 ## Use the database
 1. Create a type converter
 2. Use the Room repository to write/read logs
-3. Update the display
+
+## Fix pending issues
+1. Add singleton to fix the non-main thread issue
+2. Log the info

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        repository = new GymLogRepository(getApplication());
+        repository = new GymLogRepository.getRepository(getApplication());
 
         binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
 
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 mExercise, mWeight, mReps, currentInfo);
 
         binding.logDisplayTextView.setText(newDisplay);
+        Log.i(TAG, repository.getAllLogs().toString());
     }
 
     private void insertGymlogRecord() {
