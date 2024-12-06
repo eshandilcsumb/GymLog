@@ -1,18 +1,29 @@
-#Overview and plan
+# Overview and plan
 The goal of this project is to work through all the steps necessary to create an app that uses the Room database wrapper for persistence and that allows users to login.
 
-##setup
+## Setup
 1. Create a gitignore file
 2. Create a branch
 3. Make the initial project
 
-4. ##Basic functions
-5. 1. Wire up the buttons
-   2. Add the room dependencies
-      * Android Room Dependency (https://developer.android.com/jetpack/androidx/releases/room)
-   3. Create the POJO entity objects
-      * For now just a GymLog
-   4.  Create database interface
-   5.  Create the GymLog DAO
-   6.  Make the repository
-   7.  Use the Room repository to write/read logs
+## Basic functions
+1. Add [View Bindings](https://developer.android.com/topic/libraries/view-binding)
+2. Wire up the buttons
+3. Read information from display
+4. Log out information
+5. Test the display
+
+## Add the database
+1. Add the room dependencies
+   * [Android Room Dependency](https://developer.android.com/jetpack/androidx/releases/room)
+2. Create the POJO entity objects
+   * For now just a GymLog
+3. Create database interface
+4. Create the GymLog DAO
+5. Make the repository
+   * required lots of lambdas and auto-completes
+
+## Use the database
+1. Create a type converter
+2. Use the Room repository to write/read logs
+3. Update the display
