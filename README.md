@@ -38,3 +38,9 @@ The goal of this project is to work through all the steps necessary to create an
 1. Fix it so an empty string will not insert a log
 2. Clean up the toString()
 3. Use the retrieved records to update the display
+
+## Add users
+1. Create a users POJO
+2. Create a user DAO
+3. Update the DB repository to allow user operations
+4. Update gym log to have a userid field
