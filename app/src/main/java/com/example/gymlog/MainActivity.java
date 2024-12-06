@@ -11,7 +11,7 @@ import com.example.gymlog.database.GymLogRepository;
 import com.example.gymlog.database.entities.GymLog;
 import com.example.gymlog.databinding.ActivityMainBinding;
 
-import java.util.Locale;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        repository = new GymLogRepository.getRepository(getApplication());
+        repository = GymLogRepository.getRepository(getApplication());
 
         binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
-
+        updateDisplay();
         binding.logButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,15 +42,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDisplay() {
-        String currentInfo = binding.logDisplayTextView.getText().toString();
-        String newDisplay = String.format(Locale.US,"Exercise:%s%nWeight:%.2f%nReps:%d%n=-=-=-=%n%s",
-                mExercise, mWeight, mReps, currentInfo);
+        ArrayList<GymLog> allLogs = repository.getAllLogs();
+        StringBuilder sb = new StringBuilder();
 
-        binding.logDisplayTextView.setText(newDisplay);
-        Log.i(TAG, repository.getAllLogs().toString());
+        if(allLogs.isEmpty()) {
+            binding.logDisplayTextView.setText(R.string.nothing_to_show_time_to_hit_the_gym);
+        }
+
+        for(GymLog log : allLogs) {
+            sb.append(log);
+        }
+
+        binding.logDisplayTextView.setText(sb.toString());
     }
 
     private void insertGymlogRecord() {
+        if (mExercise.isEmpty()) {
+            return;
+        }
+
         GymLog log = new GymLog(mExercise, mWeight, mReps);
         repository.insertGymLog(log);
     }
