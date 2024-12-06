@@ -57,8 +57,15 @@ The goal of this project is to work through all the steps necessary to create an
 
 ## Update the login screen
 1. Make login screen use database.
-2. Add user preferences to store login information.
-3. Make MainActivity sort by user.
+
+## Update login screen to use live data
+1. UserDAO --> return live data.
+2. GymLogRepository --> return live data.
+3. Update login method.
+
+## Add a recycler
+1. Add user preferences to store login information.
+2. Make MainActivity sort by user.
 
 ## Add a recycler
 1. Update the gym log DAO to return live data.

@@ -3,6 +3,7 @@ package com.example.gymlog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import com.example.gymlog.database.GymLogRepository;
 import com.example.gymlog.database.entities.GymLog;
@@ -25,13 +27,16 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String MAIN_ACTIVITY_USER_ID = "com.example.gymlog.MAIN_ACTIVITY_USER_ID";
+    public static final String SHARED_PREFERENCE_USERID_KEY = "com.example.gymlog.SHARED_PREFERENCE_USERID_KEY";
+    public static final String SHARED_PREFERENCE_USERID_VALUE = "com.example.gymlog.SHARED_PREFERENCE_USERID_VALUE";
+    public static final int LOGGED_OUT = -1;
     private ActivityMainBinding binding;
     private GymLogRepository repository;
     public static final String TAG = "GYMLOG";
     String mExercise = "";
     double mWeight = 0.0;
     int mReps = 0;
-    // TODO: add login information
+
     int loggedInUserId = -1;
     private User user;
 
@@ -42,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         loginUser();
-        invalidateOptionsMenu();
 
         if (loggedInUserId == -1) {
             Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
@@ -64,9 +68,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        //TODO: make login method functional.
-        user = new User("Eric", "password");
-        loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, -1);
+        // check shared preference for logged in user
+        SharedPreferences sharedPreference = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_USERID_KEY,
+                Context.MODE_PRIVATE);
+
+        loggedInUserId = sharedPreference.getInt(SHARED_PREFERENCE_USERID_VALUE, LOGGED_OUT);
+        if (loggedInUserId != LOGGED_OUT) {
+            return;
+        }
+
+        // check intent for logged in user
+        loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
+
+        if (loggedInUserId == LOGGED_OUT) {
+            return;
+        }
+
+        LiveData<User> userObserver = repository.getUserByUserId(loggedInUserId);
+
+        userObserver.observe(this, user -> {
+            if (user != null) {
+                invalidateOptionsMenu();
+            }
+        });
     }
 
     @Override
@@ -80,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.logoutMenuItem);
         item.setVisible(true);
+        if (user == null) {
+            return false;
+        }
         item.setTitle(user.getUsername());
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -114,7 +141,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        //TODO: finish logout method
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_USERID_KEY,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
+
+        sharedPrefEditor.putInt(SHARED_PREFERENCE_USERID_KEY, LOGGED_OUT);
+        sharedPrefEditor.apply();
+
+        getIntent().putExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
+
         startActivity(LoginActivity.loginIntentFactory(getApplicationContext()));
     }
 
@@ -128,11 +163,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<GymLog> allLogs = repository.getAllLogs();
         StringBuilder sb = new StringBuilder();
 
-        if(allLogs.isEmpty()) {
+        if (allLogs.isEmpty()) {
             binding.logDisplayTextView.setText(R.string.nothing_to_show_time_to_hit_the_gym);
         }
 
-        for(GymLog log : allLogs) {
+        for (GymLog log : allLogs) {
             sb.append(log);
         }
 
