@@ -51,9 +51,17 @@ The goal of this project is to work through all the steps necessary to create an
 
 ## Add menu and logout function
 1. Add a menu to facilitate logging in and out.
+   * [Menu resources](https://developer.android.com/guide/topics/resources/menu-resource)
 2. Add logout function
-3. Add user preferences to store login information.
+3. Add alert dialog for logout.
 
 ## Update the login screen
 1. Make login screen use database.
-2. Make MainActivity sort by user.
+2. Add user preferences to store login information.
+3. Make MainActivity sort by user.
+
+## Add a recycler
+1. Update the gym log DAO to return live data.
+2. Create the view holder.
+3. Create the adapter.
+4. Update MainActivity to have a recycler view.
