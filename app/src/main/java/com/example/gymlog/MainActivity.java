@@ -77,8 +77,12 @@ public class MainActivity extends AppCompatActivity {
             loggedInUserId = sharedPreference.getInt(SHARED_PREFERENCE_USERID_VALUE, LOGGED_OUT);
         }
 
-        if (loggedInUserId == LOGGED_OUT & savedInstanceState != null
+        if (loggedInUserId == LOGGED_OUT && savedInstanceState != null
                 && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY)) {
+            loggedInUserId = savedInstanceState.getInt(SAVED_INSTANCE_STATE_USERID_KEY, LOGGED_OUT);
+        }
+
+        if (loggedInUserId == LOGGED_OUT) {
             loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
         }
 

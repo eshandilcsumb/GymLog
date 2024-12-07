@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.example.gymlog.database.entities.GymLog;
 import com.example.gymlog.database.entities.User;
 
 import java.util.List;
