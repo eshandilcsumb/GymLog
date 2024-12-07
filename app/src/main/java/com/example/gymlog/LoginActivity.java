@@ -39,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     private void verifyUser() {
         String username = binding.userNameLoginEditText.getText().toString();
 
-
         if (username.isEmpty()) {
             toastMaker("Username cannot be empty.");
             return;
@@ -52,17 +51,9 @@ public class LoginActivity extends AppCompatActivity {
                 String password = binding.passwordLoginEditText.getText().toString();
 
                 if (password.equals(user.getPassword())) {
-                    SharedPreferences sharedPreferences = getApplicationContext()
-                            .getSharedPreferences(MainActivity.SHARED_PREFERENCE_USERID_KEY,
-                                    Context.MODE_PRIVATE);
-                    SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
-
-                    sharedPrefEditor.putInt(MainActivity.SHARED_PREFERENCE_USERID_KEY, MainActivity.LOGGED_OUT);
-                    sharedPrefEditor.apply();
                     startActivity(MainActivity.mainActivityIntentFactory(getApplicationContext(), user.getId()));
                 } else {
                     toastMaker("Invalid password");
-                    ;
                     binding.passwordLoginEditText.setSelection(0);
                 }
             } else {

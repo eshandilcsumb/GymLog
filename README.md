@@ -63,9 +63,14 @@ The goal of this project is to work through all the steps necessary to create an
 2. GymLogRepository --> return live data.
 3. Update login method.
 
-## Add a recycler
+## Fix login crash
 1. Add user preferences to store login information.
 2. Make MainActivity sort by user.
+
+## Bugs to fix
+1. User login is not persisting.
+2. Display is not updating immediately.
+   * Issue is with async, adding a recycler will fix the issue.
 
 ## Add a recycler
 1. Update the gym log DAO to return live data.

@@ -23,11 +23,12 @@ import com.example.gymlog.database.entities.GymLog;
 import com.example.gymlog.database.entities.User;
 import com.example.gymlog.databinding.ActivityMainBinding;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String MAIN_ACTIVITY_USER_ID = "com.example.gymlog.MAIN_ACTIVITY_USER_ID";
     public static final String SHARED_PREFERENCE_USERID_KEY = "com.example.gymlog.SHARED_PREFERENCE_USERID_KEY";
+    private static final String SAVED_INSTANCE_STATE_USERID_KEY = "com.example.gymlog.SAVED_INSTANCE_STATE_USERID_KEY";
     public static final String SHARED_PREFERENCE_USERID_VALUE = "com.example.gymlog.SHARED_PREFERENCE_USERID_VALUE";
     public static final int LOGGED_OUT = -1;
     private ActivityMainBinding binding;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     double mWeight = 0.0;
     int mReps = 0;
 
-    int loggedInUserId = -1;
+    int loggedInUserId = LOGGED_OUT;
     private User user;
 
     @Override
@@ -46,14 +47,13 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        loginUser();
+        repository = GymLogRepository.getRepository(getApplication());
+        loginUser(savedInstanceState);
 
-        if (loggedInUserId == -1) {
+        if (loggedInUserId == LOGGED_OUT) {
             Intent intent = LoginActivity.loginIntentFactory(getApplicationContext());
             startActivity(intent);
         }
-
-        repository = GymLogRepository.getRepository(getApplication());
 
         binding.logDisplayTextView.setMovementMethod(new ScrollingMovementMethod());
         updateDisplay();
@@ -67,18 +67,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loginUser() {
+    private void loginUser(Bundle savedInstanceState) {
         // check shared preference for logged in user
         SharedPreferences sharedPreference = getApplicationContext().getSharedPreferences(SHARED_PREFERENCE_USERID_KEY,
                 Context.MODE_PRIVATE);
 
-        loggedInUserId = sharedPreference.getInt(SHARED_PREFERENCE_USERID_VALUE, LOGGED_OUT);
-        if (loggedInUserId != LOGGED_OUT) {
-            return;
+        if (sharedPreference.contains(SHARED_PREFERENCE_USERID_VALUE)) {
+            loggedInUserId = sharedPreference.getInt(SHARED_PREFERENCE_USERID_VALUE, LOGGED_OUT);
         }
 
-        // check intent for logged in user
-        loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
+        if (loggedInUserId == LOGGED_OUT && savedInstanceState != null
+                && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY)) {
+            loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
+        }
 
         if (loggedInUserId == LOGGED_OUT) {
             return;
@@ -87,10 +88,25 @@ public class MainActivity extends AppCompatActivity {
         LiveData<User> userObserver = repository.getUserByUserId(loggedInUserId);
 
         userObserver.observe(this, user -> {
-            if (user != null) {
+            this.user = user;
+            if (this.user != null) {
                 invalidateOptionsMenu();
+            } else {
+                logout();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVED_INSTANCE_STATE_USERID_KEY, loggedInUserId);
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCE_USERID_KEY,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
+        sharedPrefEditor.putInt(SHARED_PREFERENCE_USERID_KEY, loggedInUserId);
+
+        sharedPrefEditor.apply();
     }
 
     @Override
@@ -160,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDisplay() {
-        ArrayList<GymLog> allLogs = repository.getAllLogs();
+        LiveData<List<GymLog>> logObserver = repository.getAllLogsByUserId(loggedInUserId);
+
+        logObserver.observe(this, List<GymLog>);
         StringBuilder sb = new StringBuilder();
 
         if (allLogs.isEmpty()) {
