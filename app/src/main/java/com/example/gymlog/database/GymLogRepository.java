@@ -90,21 +90,7 @@ public class GymLogRepository {
         return userDAO.getUserByUserId(userId);
     }
 
-    public ArrayList<GymLog> getAllLogsByUserId(int userId) {
-        Future<ArrayList<GymLog>> future = GymLogDatabase.databaseWriteExecutor.submit(
-                new Callable<ArrayList<GymLog>>() {
-                    @Override
-                    public ArrayList<GymLog> call() throws Exception {
-                        return (ArrayList<GymLog>) gymLogDAO.getRecordsByUserId(userId);
-                    }
-                }
-        );
-
-        try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.i(MainActivity.TAG, "Problem when getting user gym logs in the repository");
-        }
-        return null;
+    public LiveData<List<GymLog>> getAllLogsByUserIdLiveData(int userId) {
+        return gymLogDAO.getRecordsByUserIdLiveData(userId);
     }
 }
