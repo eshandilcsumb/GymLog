@@ -67,10 +67,12 @@ The goal of this project is to work through all the steps necessary to create an
 1. Add user preferences to store login information.
 2. Make MainActivity sort by user.
 
-## Bugs to fix
-1. User login is not persisting.
-2. Display is not updating immediately.
-   * Issue is with async, adding a recycler will fix the issue.
+## Fix shared preference
+[Share preferences](https://developer.android.com/training/data-store/shared-preferences#java)
+1. Create a method to store userId in the shared preference.
+2. Update shared preference to read from string.xml file.
+3. Update logout method.
+4. Update login method.
 
 ## Add a recycler
 1. Update the gym log DAO to return live data.
