@@ -23,6 +23,7 @@ import com.example.gymlog.database.entities.GymLog;
 import com.example.gymlog.database.entities.User;
 import com.example.gymlog.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             loggedInUserId = sharedPreference.getInt(SHARED_PREFERENCE_USERID_VALUE, LOGGED_OUT);
         }
 
-        if (loggedInUserId == LOGGED_OUT && savedInstanceState != null
+        if (loggedInUserId == LOGGED_OUT & savedInstanceState != null
                 && savedInstanceState.containsKey(SAVED_INSTANCE_STATE_USERID_KEY)) {
             loggedInUserId = getIntent().getIntExtra(MAIN_ACTIVITY_USER_ID, LOGGED_OUT);
         }
@@ -92,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
             if (this.user != null) {
                 invalidateOptionsMenu();
             } else {
-                logout();
+                //TODO: verify if this was an issue
+//                logout();
             }
         });
     }
@@ -176,14 +178,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDisplay() {
-        LiveData<List<GymLog>> logObserver = repository.getAllLogsByUserId(loggedInUserId);
-
-        logObserver.observe(this, List<GymLog>);
-        StringBuilder sb = new StringBuilder();
+        ArrayList<GymLog> allLogs = repository.getAllLogsByUserId(loggedInUserId);
 
         if (allLogs.isEmpty()) {
             binding.logDisplayTextView.setText(R.string.nothing_to_show_time_to_hit_the_gym);
         }
+
+        StringBuilder sb = new StringBuilder();
 
         for (GymLog log : allLogs) {
             sb.append(log);
