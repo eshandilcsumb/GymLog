@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/recyclerItemTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="2dp"
         android:padding="2dp"
         android:text="HELLO"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:background="@color/material_dynamic_neutral_variant90"
+        android:textColor="@color/material_dynamic_primary60"/>
 
 </LinearLayout>

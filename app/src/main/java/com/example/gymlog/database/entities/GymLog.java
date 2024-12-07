@@ -33,8 +33,7 @@ public class GymLog {
         return "Exercise: " + exercise + '\n' +
                 "Weight: " + weight + '\n' +
                 "Reps: " + reps + '\n' +
-                "Date: " + date + '\n' +
-                "=-=-=-=-=-=-=\n";
+                "Date: " + date + '\n';
     }
 
     @Override

@@ -14,11 +14,11 @@ public class GymLogViewHolder extends RecyclerView.ViewHolder {
 
     private GymLogViewHolder(View gymLogView) {
         super(gymLogView);
-        gymLogViewItem = gymLogView.findViewById(R.id.logDisplayRecyclerView);
+        this.gymLogViewItem = gymLogView.findViewById(R.id.recyclerItemTextView);
     }
 
     public void bind(String text) {
-        gymLogViewItem.setText(text);
+        this.gymLogViewItem.setText(text);
     }
 
     static GymLogViewHolder create(ViewGroup parent) {
